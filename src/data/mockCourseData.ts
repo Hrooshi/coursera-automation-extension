@@ -31,23 +31,41 @@ export const SAMPLE_VIDEOS = [
 ];
 
 export const MOODLE_MODULE_ITEMS: CourseModuleItem[] = [
-  // Module 1
+  // Module 1 (Book: Fundamentals & Core Systems)
   {
     id: 'moodle-1.1',
-    chapter: 'Module 1: Introduction & Fundamentals',
+    chapter: 'Module 1: Introduction & Fundamentals (Book)',
     title: '1.1 Course Orientation & Syllabus Overview',
     type: 'video',
     duration: '3m 15s',
-    completed: true,
+    completed: false,
     lmsPlayerType: 'videojs'
   },
   {
     id: 'moodle-1.2',
-    chapter: 'Module 1: Introduction & Fundamentals',
+    chapter: 'Module 1: Introduction & Fundamentals (Book)',
     title: '1.2 Academic Integrity Guidelines',
     type: 'reading',
     duration: '5 min',
-    completed: true
+    completed: false
+  },
+  {
+    id: 'moodle-1.3',
+    chapter: 'Module 1: Introduction & Fundamentals (Book)',
+    title: '1.3 Engineering Systems Analysis',
+    type: 'video',
+    duration: '4m 20s',
+    completed: false,
+    lmsPlayerType: 'videojs'
+  },
+  {
+    id: 'moodle-1.4',
+    chapter: 'Module 1: Introduction & Fundamentals (Book)',
+    title: '1.4 Environmental Regulations & Standards',
+    type: 'video',
+    duration: '5m 10s',
+    completed: false,
+    lmsPlayerType: 'videojs'
   },
 
   // Module 2

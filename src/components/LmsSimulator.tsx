@@ -63,15 +63,24 @@ export const LmsSimulator: React.FC<LmsSimulatorProps> = ({
   // Simulates running the Moodle Batch Console Script
   const runBatchUnlocker = async () => {
     setIsBatchRunning(true);
-    onLog('info', '🚀 Started Moodle Batch Completer script simulation...');
+    onLog('info', '🚀 Started Moodle Completer with Module Detection & Skip "Done" Detection...');
+    onLog('info', '🔍 [Module Detection] Scanned course syllabus: auto-expanding accordions & indexing all modules...');
 
     for (let i = 0; i < modules.length; i++) {
       const item = modules[i];
+
+      // Check if item is already completed / marked Done
+      if (item.completed) {
+        onLog('success', `⏭️ [Skip "Done"] Activity "${item.title}" is already marked Done! Skipping...`);
+        setBatchStep(`⏭️ Skipping completed item [${i + 1}/${modules.length}]: "${item.title.substring(0, 20)}..."`);
+        await new Promise(r => setTimeout(r, 400));
+        continue;
+      }
+
       setActiveItemId(item.id);
 
       if (item.type === 'video') {
-        setBatchStep(`[${i + 1}/${modules.length}] Playing video for 1s: "${item.title.substring(0, 24)}..."`);
-        onLog('video', `[Module Auto-Player] Opened video: ${item.title}`);
+        onLog('video', `[Module Auto-Player] Opened pending video: ${item.title}`);
         
         // Start playback
         if (videoRef.current) {
@@ -80,15 +89,18 @@ export const LmsSimulator: React.FC<LmsSimulatorProps> = ({
         }
         setIsPlaying(true);
 
-        // Wait 1 second (as requested)
-        await new Promise(r => setTimeout(r, 1000));
+        // Wait (3.5 seconds with live countdown)
+        for (let sec = 3; sec >= 1; sec--) {
+          setBatchStep(`[${i + 1}/${modules.length}] Playing video: ${sec}s remaining...`);
+          await new Promise(r => setTimeout(r, 1000));
+        }
 
         // Mark 100% complete
         if (videoRef.current) {
           videoRef.current.currentTime = videoRef.current.duration || 337.5;
         }
         setIsVideoCompleted(true);
-        onLog('success', `[Module Auto-Player] Video played 1s & marked 100% complete!`);
+        onLog('success', `[Module Auto-Player] Video played 3.5s & marked 100% complete!`);
       } else {
         setBatchStep(`[${i + 1}/${modules.length}] Viewing: "${item.title.substring(0, 24)}..."`);
         onLog('info', `[Module Auto-Player] Viewed activity: ${item.title}`);
@@ -96,11 +108,20 @@ export const LmsSimulator: React.FC<LmsSimulatorProps> = ({
       }
 
       setModules(prev => prev.map((m, idx) => idx <= i ? { ...m, completed: true } : m));
+
+      // Reload simulation step requested by user
+      if (i + 1 < modules.length) {
+        const nextItem = modules[i + 1];
+        setBatchStep(`🔄 Reloading to register completion & detect next chapter (${nextItem.title.substring(0, 16)}...)...`);
+        onLog('info', `🔄 [Reload Page] Reloading page so Moodle calculates completion dependencies...`);
+        await new Promise(r => setTimeout(r, 800));
+        onLog('navigation', `🎯 [Next Chapter Unlocked]: Detected newly available "${nextItem.title}"! Navigating...`);
+      }
     }
 
-    setBatchStep('🎉 Done! Returned to main page with all items unlocked!');
+    setBatchStep('🎉 Done! All modules and chapters completed!');
     setIsBatchRunning(false);
-    onLog('success', '🎉 Module complete! Main page reloaded with all locked restrictions removed.');
+    onLog('success', '🎉 Module complete! Main page reloaded with all course activities green.');
   };
 
   // Switch modules list when LMS changes
@@ -647,6 +668,105 @@ export const LmsSimulator: React.FC<LmsSimulatorProps> = ({
                   className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-4 py-2 rounded-lg font-semibold flex items-center gap-1.5 cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" /> Submit Auto-Completed Answers
+                </button>
+              </div>
+            </div>
+          ) : activeItem.id === 'moodle-6.2' ? (
+            /* Moodle Book Activity (Matching user's exact screenshot with Table of Contents: 6.2.1 & 6.2.2 and multiple videos) */
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-blue-400" />
+                  <div>
+                    <div className="text-[10px] text-slate-400">UNC10030- / Module 6 | Conclusions and Reflections / 6.2 Commitments for the Future</div>
+                    <h3 className="font-bold text-slate-100 text-base">6.2 Commitments for the Future</h3>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] bg-blue-950 text-blue-400 border border-blue-800 px-2.5 py-1 rounded-full font-semibold">
+                    Book Module
+                  </span>
+                </div>
+              </div>
+
+              {/* Grid: Content area + Table of contents sidebar */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="md:col-span-3 flex flex-col gap-3">
+                  <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-300">
+                    <b className="text-white">Chapter 6.2.1: Key Commitments & Institutional Objectives</b>
+                    <p className="mt-1 text-slate-400">
+                      Watch the 2 video segments below to complete this section.
+                    </p>
+                  </div>
+
+                  {/* Multiple Videos on same page */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="bg-black rounded-lg border border-slate-800 p-2.5 flex flex-col gap-2">
+                      <div className="flex items-center justify-between text-[11px] text-slate-300">
+                        <span className="font-semibold text-blue-400">Video 1: Overview</span>
+                        <span className="font-mono text-slate-400">03:20</span>
+                      </div>
+                      <div className="aspect-video bg-slate-950 rounded flex items-center justify-center border border-slate-850 relative group">
+                        <Play className="w-8 h-8 text-blue-500" />
+                        <span className="absolute bottom-2 left-2 text-[10px] text-slate-400 font-mono">video#vid_6_2_1_a</span>
+                      </div>
+                      <button 
+                        onClick={() => onLog('success', '✅ Completed Video 1 of 2 in 6.2.1')}
+                        className="bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-semibold py-1 rounded cursor-pointer transition-all"
+                      >
+                        ⚡ Complete Video 1 (100%)
+                      </button>
+                    </div>
+
+                    <div className="bg-black rounded-lg border border-slate-800 p-2.5 flex flex-col gap-2">
+                      <div className="flex items-center justify-between text-[11px] text-slate-300">
+                        <span className="font-semibold text-blue-400">Video 2: Implementation</span>
+                        <span className="font-mono text-slate-400">04:15</span>
+                      </div>
+                      <div className="aspect-video bg-slate-950 rounded flex items-center justify-center border border-slate-850 relative group">
+                        <Play className="w-8 h-8 text-blue-500" />
+                        <span className="absolute bottom-2 left-2 text-[10px] text-slate-400 font-mono">video#vid_6_2_1_b</span>
+                      </div>
+                      <button 
+                        onClick={() => onLog('success', '✅ Completed Video 2 of 2 in 6.2.1')}
+                        className="bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-semibold py-1 rounded cursor-pointer transition-all"
+                      >
+                        ⚡ Complete Video 2 (100%)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Table of contents index sidebar matching user's screenshot */}
+                <div className="bg-slate-950 p-3.5 rounded-lg border border-slate-800 flex flex-col gap-2 text-xs">
+                  <h4 className="font-bold text-slate-200 text-xs border-b border-slate-800 pb-1.5">
+                    Table of contents
+                  </h4>
+                  <ul className="flex flex-col gap-1.5 pl-2">
+                    <li className="flex items-center gap-1.5 font-semibold text-blue-400">
+                      <span>&bull;</span>
+                      <span>6.2.1 (Active Page)</span>
+                    </li>
+                    <li className="flex items-center gap-1.5 text-slate-400 hover:text-slate-200 cursor-pointer">
+                      <span>&bull;</span>
+                      <span className="underline decoration-slate-600">6.2.2</span>
+                    </li>
+                  </ul>
+                  <div className="mt-3 pt-2 border-t border-slate-850 text-[10px] text-slate-500">
+                    Auto-completer will traverse all sub-chapters in TOC.
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+                <button
+                  onClick={() => {
+                    setModules(prev => prev.map(m => m.id === 'moodle-6.2' ? { ...m, completed: true } : m));
+                    onLog('success', '🏆 Finished Moodle Book: All sub-chapters (6.2.1, 6.2.2) and videos completed!');
+                  }}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-4 py-2 rounded-lg font-semibold flex items-center gap-1.5 cursor-pointer shadow-md shadow-emerald-600/30"
+                >
+                  <CheckCircle className="w-3.5 h-3.5" /> Mark Entire Book Activity Completed
                 </button>
               </div>
             </div>

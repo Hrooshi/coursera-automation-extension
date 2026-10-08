@@ -200,6 +200,37 @@ export function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl mx-auto px-4 py-6 w-full flex flex-col gap-6">
+        {/* Unmissable Fix Banner for the user's exact error screenshot */}
+        <div className="bg-gradient-to-r from-red-950/60 via-slate-900 to-slate-900 border border-red-500/50 rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-lg bg-red-600/20 text-red-400 flex items-center justify-center shrink-0 border border-red-500/40 mt-0.5 text-base">
+              ⚠️
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-sm text-red-200">
+                  Fix: "Could not load javascript 'dist/scripts/content.js' for script"
+                </h3>
+                <span className="text-[10px] bg-red-950 border border-red-800 text-red-400 font-mono px-2 py-0.5 rounded-full">
+                  Action Required
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 mt-1 max-w-3xl leading-relaxed">
+                You are trying to load the original GitHub zip (<code className="text-red-300 font-mono bg-black/40 px-1 py-0.5 rounded">coursera-automation-extension-master (1)</code>), which was <b>missing the compiled files on GitHub</b>! Download our fixed package below — it has all files included and loads with 0 errors.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => downloadExtensionZip()}
+              className="bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold text-xs px-4 py-2.5 rounded-lg flex items-center gap-2 shadow-lg shadow-blue-600/30 cursor-pointer transition-all"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download Working Extension (.ZIP)</span>
+            </button>
+          </div>
+        </div>
         {activeTab === 'simulator' && (
           <div className="flex flex-col gap-6">
             {/* Top Info Banner for Students */}

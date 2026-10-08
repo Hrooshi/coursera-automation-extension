@@ -27,6 +27,22 @@ export const InstallationGuide: React.FC = () => {
         </button>
       </div>
 
+      {/* Direct Fix for user's screenshot error */}
+      <div className="bg-red-950/40 border border-red-500/50 rounded-xl p-4 flex flex-col gap-2">
+        <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
+          <span>⚠️ Seeing "Could not load javascript 'dist/scripts/content.js' for script"?</span>
+        </div>
+        <p className="text-xs text-slate-300 leading-relaxed">
+          This error happens when you try to load the <b>broken GitHub zip</b> (<code className="text-red-300 bg-black/40 px-1 py-0.5 rounded font-mono">coursera-automation-extension-master</code>). The original repository on GitHub omitted its built files!
+        </p>
+        <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-emerald-300 flex flex-col gap-1.5 font-medium">
+          <span>✅ <b>How to fix in 10 seconds:</b></span>
+          <span>1. Click the blue <b>"Download Extension (.ZIP)"</b> button above to download our fixed package.</span>
+          <span>2. Extract <code className="text-white">Universal-Course-Video-Completer-v3.7.0.zip</code>.</span>
+          <span>3. In <code className="text-white">chrome://extensions</code>, click <b>"Load unpacked"</b> and pick that extracted folder. It will load immediately with zero errors!</span>
+        </div>
+      </div>
+
       {/* Step by step cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Step 1 */}

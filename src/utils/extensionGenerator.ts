@@ -192,7 +192,14 @@ export const EXTENSION_FILES: ExtensionFile[] = [
   // Find next button across Moodle, Coursera, Canvas, Blackboard, etc.
   function tryAutoAdvance() {
     const nextSelectors = [
-      // Moodle LMS / MIT-WPU LMS
+      // Moodle LMS / MIT-WPU LMS Book & Activity Navigation
+      '.nav-next a',
+      'a.nav-next',
+      '.arrow_link.next',
+      'a[title*="Next chapter"]',
+      'a[aria-label*="Next chapter"]',
+      '.book-next a',
+      '[data-action="next-chapter"]',
       '.activity-navigation .next-activity a',
       '.activity-navigation a[title*="Next"]',
       '#next-activity-link',
@@ -887,6 +894,21 @@ export async function downloadExtensionZip(): Promise<void> {
   for (const file of EXTENSION_FILES) {
     zip.file(file.path, file.content);
   }
+
+  // Also add dist/ mirrors so if someone's manifest or folder references dist/scripts/content.js, it works 100%
+  const contentFile = EXTENSION_FILES.find(f => f.path === 'content.js')?.content || '';
+  const bgFile = EXTENSION_FILES.find(f => f.path === 'background.js')?.content || '';
+  const cssFile = EXTENSION_FILES.find(f => f.path === 'content.css')?.content || '';
+  const popupFile = EXTENSION_FILES.find(f => f.path === 'popup.html')?.content || '';
+  const injectedFile = EXTENSION_FILES.find(f => f.path === 'injected.js')?.content || '';
+
+  zip.file('dist/scripts/content.js', contentFile);
+  zip.file('dist/scripts/background.js', bgFile);
+  zip.file('dist/scripts/xyz.js', '// Utility helper\nconsole.log("active");');
+  zip.file('dist/scripts/rdr.js', injectedFile);
+  zip.file('dist/popup.html', popupFile);
+  zip.file('dist/settings.html', popupFile);
+  zip.file('dist/ui/content.css', cssFile);
 
   // Generate basic icon placeholders in SVG / DataURI or minimal 1x1 png bytes
   // A minimal valid 1x1 PNG transparent byte array
