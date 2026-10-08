@@ -67,21 +67,40 @@ export const LmsSimulator: React.FC<LmsSimulatorProps> = ({
 
     for (let i = 0; i < modules.length; i++) {
       const item = modules[i];
-      setBatchStep(`Marking "${item.title}" as viewed...`);
       setActiveItemId(item.id);
-      onLog('video', `[Batch Viewer] Visited: ${item.title}`, 'Satisfied Moodle server completion/view.php requirement');
-      
-      await new Promise(r => setTimeout(r, 600));
+
+      if (item.type === 'video') {
+        setBatchStep(`[${i + 1}/${modules.length}] Playing video for 1s: "${item.title.substring(0, 24)}..."`);
+        onLog('video', `[Module Auto-Player] Opened video: ${item.title}`);
+        
+        // Start playback
+        if (videoRef.current) {
+          videoRef.current.muted = true;
+          videoRef.current.play().catch(() => {});
+        }
+        setIsPlaying(true);
+
+        // Wait 1 second (as requested)
+        await new Promise(r => setTimeout(r, 1000));
+
+        // Mark 100% complete
+        if (videoRef.current) {
+          videoRef.current.currentTime = videoRef.current.duration || 337.5;
+        }
+        setIsVideoCompleted(true);
+        onLog('success', `[Module Auto-Player] Video played 1s & marked 100% complete!`);
+      } else {
+        setBatchStep(`[${i + 1}/${modules.length}] Viewing: "${item.title.substring(0, 24)}..."`);
+        onLog('info', `[Module Auto-Player] Viewed activity: ${item.title}`);
+        await new Promise(r => setTimeout(r, 700));
+      }
 
       setModules(prev => prev.map((m, idx) => idx <= i ? { ...m, completed: true } : m));
-      if (item.type === 'video') {
-        setIsVideoCompleted(true);
-      }
     }
 
-    setBatchStep('All course activities unlocked!');
+    setBatchStep('🎉 Done! Returned to main page with all items unlocked!');
     setIsBatchRunning(false);
-    onLog('success', '🎉 Batch completion finished! All locked restrictions uncurled and satisfied.');
+    onLog('success', '🎉 Module complete! Main page reloaded with all locked restrictions removed.');
   };
 
   // Switch modules list when LMS changes
@@ -718,9 +737,16 @@ export const LmsSimulator: React.FC<LmsSimulatorProps> = ({
                 // Determine if item is locked based on previous item completion
                 const isLocked = selectedLmsIndex === 0 && idx > 0 && !modules[idx - 1].completed && !item.completed;
                 const prevItemTitle = idx > 0 ? modules[idx - 1].title : '';
+                const showChapterHeader = idx === 0 || modules[idx - 1].chapter !== item.chapter;
 
                 return (
                   <div key={item.id} className="flex flex-col gap-1">
+                    {showChapterHeader && item.chapter && (
+                      <div className="text-[11px] font-bold text-blue-400 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800 flex items-center justify-between mt-1.5 shadow-sm">
+                        <span className="truncate">📂 {item.chapter}</span>
+                        <span className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Module</span>
+                      </div>
+                    )}
                     <button
                       onClick={() => !isLocked && setActiveItemId(item.id)}
                       disabled={isLocked}

@@ -31,8 +31,48 @@ export const SAMPLE_VIDEOS = [
 ];
 
 export const MOODLE_MODULE_ITEMS: CourseModuleItem[] = [
+  // Module 1
+  {
+    id: 'moodle-1.1',
+    chapter: 'Module 1: Introduction & Fundamentals',
+    title: '1.1 Course Orientation & Syllabus Overview',
+    type: 'video',
+    duration: '3m 15s',
+    completed: true,
+    lmsPlayerType: 'videojs'
+  },
+  {
+    id: 'moodle-1.2',
+    chapter: 'Module 1: Introduction & Fundamentals',
+    title: '1.2 Academic Integrity Guidelines',
+    type: 'reading',
+    duration: '5 min',
+    completed: true
+  },
+
+  // Module 2
+  {
+    id: 'moodle-2.1',
+    chapter: 'Module 2: Core Engineering Frameworks',
+    title: '2.1 Baseline Systems Modeling',
+    type: 'video',
+    duration: '6m 20s',
+    completed: true,
+    lmsPlayerType: 'videojs'
+  },
+  {
+    id: 'moodle-2.2',
+    chapter: 'Module 2: Core Engineering Frameworks',
+    title: 'Module 2 Comprehension Reading',
+    type: 'reading',
+    duration: '8 min',
+    completed: true
+  },
+
+  // Module 5 (From user's screenshot)
   {
     id: 'moodle-5.1',
+    chapter: 'Module 5: Sustainable Future Strategies',
     title: '5.1 Individual and Community Action',
     type: 'video',
     duration: '5m 37s',
@@ -41,6 +81,7 @@ export const MOODLE_MODULE_ITEMS: CourseModuleItem[] = [
   },
   {
     id: 'moodle-5.2',
+    chapter: 'Module 5: Sustainable Future Strategies',
     title: '5.2 Trends for a Sustainable Future',
     type: 'reading',
     duration: '8 min',
@@ -48,6 +89,7 @@ export const MOODLE_MODULE_ITEMS: CourseModuleItem[] = [
   },
   {
     id: 'moodle-5-reading',
+    chapter: 'Module 5: Sustainable Future Strategies',
     title: 'Reading Material | Module 5',
     type: 'reading',
     duration: '10 min',
@@ -55,13 +97,17 @@ export const MOODLE_MODULE_ITEMS: CourseModuleItem[] = [
   },
   {
     id: 'moodle-5-assess',
+    chapter: 'Module 5: Sustainable Future Strategies',
     title: 'Assessment | Module 5 (Non-Graded)',
     type: 'quiz',
     duration: '15 min',
     completed: false
   },
+
+  // Module 6 (From user's screenshot)
   {
     id: 'moodle-6-overview',
+    chapter: 'Module 6: Conclusions and Reflections',
     title: 'Overview | Module 6',
     type: 'reading',
     duration: '5 min',
@@ -69,6 +115,7 @@ export const MOODLE_MODULE_ITEMS: CourseModuleItem[] = [
   },
   {
     id: 'moodle-6.1',
+    chapter: 'Module 6: Conclusions and Reflections',
     title: '6.1 Review of Course Content',
     type: 'video',
     duration: '7m 12s',
@@ -76,6 +123,7 @@ export const MOODLE_MODULE_ITEMS: CourseModuleItem[] = [
   },
   {
     id: 'moodle-6.2',
+    chapter: 'Module 6: Conclusions and Reflections',
     title: '6.2 Commitments for the Future',
     type: 'discussion',
     duration: '1 reflection',

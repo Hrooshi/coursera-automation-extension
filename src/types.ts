@@ -21,6 +21,7 @@ export interface AutomationLog {
 
 export interface CourseModuleItem {
   id: string;
+  chapter?: string;
   title: string;
   type: 'video' | 'reading' | 'quiz' | 'discussion';
   duration?: string;
