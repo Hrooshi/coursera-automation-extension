@@ -856,7 +856,11 @@ chrome.commands.onCommand.addListener(async (command) => {
   btnSkipAll.addEventListener('click', () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]?.id) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: 'SKIP_ALL_VIDEOS' }, (res) => {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'SKIP_ALL_VIDEOS' }, () => {
+          if (chrome.runtime.lastError) {
+            statusText.textContent = 'Please refresh the course page';
+            return;
+          }
           statusText.textContent = '⚡ Videos completed!';
         });
       }
@@ -867,6 +871,10 @@ chrome.commands.onCommand.addListener(async (command) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]?.id) {
         chrome.tabs.sendMessage(tabs[0].id, { action: 'SET_SPEED', speed: 16 }, () => {
+          if (chrome.runtime.lastError) {
+            statusText.textContent = 'Please refresh the course page';
+            return;
+          }
           statusText.textContent = '⏩ Playback set to 16x';
         });
       }
@@ -877,6 +885,10 @@ chrome.commands.onCommand.addListener(async (command) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]?.id) {
         chrome.tabs.sendMessage(tabs[0].id, { action: 'CLICK_NEXT' }, () => {
+          if (chrome.runtime.lastError) {
+            statusText.textContent = 'Please refresh the course page';
+            return;
+          }
           statusText.textContent = '⏭️ Advance triggered';
         });
       }
