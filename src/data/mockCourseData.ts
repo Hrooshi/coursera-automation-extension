@@ -32,32 +32,53 @@ export const SAMPLE_VIDEOS = [
 
 export const MOODLE_MODULE_ITEMS: CourseModuleItem[] = [
   {
-    id: 'moodle-1',
-    title: 'MIT_ENS_Mod5_Overview (1).mp4',
+    id: 'moodle-5.1',
+    title: '5.1 Individual and Community Action',
     type: 'video',
     duration: '5m 37s',
     completed: false,
     lmsPlayerType: 'videojs'
   },
   {
-    id: 'moodle-2',
-    title: 'Module 5 Reading: Environmental Impact Analysis Guidelines',
+    id: 'moodle-5.2',
+    title: '5.2 Trends for a Sustainable Future',
     type: 'reading',
-    duration: '12 min',
+    duration: '8 min',
     completed: false
   },
   {
-    id: 'moodle-3',
-    title: 'Graded Assessment: Module 5 Comprehension Check',
+    id: 'moodle-5-reading',
+    title: 'Reading Material | Module 5',
+    type: 'reading',
+    duration: '10 min',
+    completed: false
+  },
+  {
+    id: 'moodle-5-assess',
+    title: 'Assessment | Module 5 (Non-Graded)',
     type: 'quiz',
     duration: '15 min',
     completed: false
   },
   {
-    id: 'moodle-4',
-    title: 'Class Discussion Forum: Sustainable Urban Frameworks',
+    id: 'moodle-6-overview',
+    title: 'Overview | Module 6',
+    type: 'reading',
+    duration: '5 min',
+    completed: false
+  },
+  {
+    id: 'moodle-6.1',
+    title: '6.1 Review of Course Content',
+    type: 'video',
+    duration: '7m 12s',
+    completed: false
+  },
+  {
+    id: 'moodle-6.2',
+    title: '6.2 Commitments for the Future',
     type: 'discussion',
-    duration: '1 post required',
+    duration: '1 reflection',
     completed: false
   }
 ];

@@ -57,6 +57,33 @@ export const LmsSimulator: React.FC<LmsSimulatorProps> = ({
   ]);
   const [myDiscussionInput, setMyDiscussionInput] = useState('');
 
+  const [isBatchRunning, setIsBatchRunning] = useState(false);
+  const [batchStep, setBatchStep] = useState<string>('');
+
+  // Simulates running the Moodle Batch Console Script
+  const runBatchUnlocker = async () => {
+    setIsBatchRunning(true);
+    onLog('info', '🚀 Started Moodle Batch Completer script simulation...');
+
+    for (let i = 0; i < modules.length; i++) {
+      const item = modules[i];
+      setBatchStep(`Marking "${item.title}" as viewed...`);
+      setActiveItemId(item.id);
+      onLog('video', `[Batch Viewer] Visited: ${item.title}`, 'Satisfied Moodle server completion/view.php requirement');
+      
+      await new Promise(r => setTimeout(r, 600));
+
+      setModules(prev => prev.map((m, idx) => idx <= i ? { ...m, completed: true } : m));
+      if (item.type === 'video') {
+        setIsVideoCompleted(true);
+      }
+    }
+
+    setBatchStep('All course activities unlocked!');
+    setIsBatchRunning(false);
+    onLog('success', '🎉 Batch completion finished! All locked restrictions uncurled and satisfied.');
+  };
+
   // Switch modules list when LMS changes
   useEffect(() => {
     const newItems = selectedLmsIndex === 1 ? COURSERA_MODULE_ITEMS : MOODLE_MODULE_ITEMS;
@@ -674,41 +701,72 @@ export const LmsSimulator: React.FC<LmsSimulatorProps> = ({
               />
             </div>
 
+            {/* Run Batch Completer Button */}
+            <button
+              onClick={runBatchUnlocker}
+              disabled={isBatchRunning}
+              className="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-semibold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20 cursor-pointer transition-all disabled:opacity-50"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{isBatchRunning ? batchStep || 'Running Batch Viewer...' : '⚡ Run 1-Click Batch Unlocker'}</span>
+            </button>
+
             {/* Module Items List */}
-            <div className="flex flex-col gap-1.5">
-              {modules.map((item) => {
+            <div className="flex flex-col gap-2">
+              {modules.map((item, idx) => {
                 const isActive = item.id === activeItemId;
+                // Determine if item is locked based on previous item completion
+                const isLocked = selectedLmsIndex === 0 && idx > 0 && !modules[idx - 1].completed && !item.completed;
+                const prevItemTitle = idx > 0 ? modules[idx - 1].title : '';
+
                 return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveItemId(item.id)}
-                    className={`w-full text-left p-2.5 rounded-lg border text-xs transition-all flex items-start gap-2 cursor-pointer ${
-                      isActive
-                        ? 'bg-blue-600/10 border-blue-500/60 text-white shadow-sm'
-                        : 'bg-slate-950/60 hover:bg-slate-800/80 border-slate-800/80 text-slate-300'
-                    }`}
-                  >
-                    <div className="mt-0.5">
-                      {item.completed ? (
-                        <CheckCircle className="w-4 h-4 text-emerald-400" />
-                      ) : item.type === 'video' ? (
-                        <Play className="w-4 h-4 text-blue-400" />
-                      ) : item.type === 'reading' ? (
-                        <BookOpen className="w-4 h-4 text-amber-400" />
-                      ) : item.type === 'quiz' ? (
-                        <HelpCircle className="w-4 h-4 text-indigo-400" />
-                      ) : (
-                        <MessageSquare className="w-4 h-4 text-slate-400" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium truncate leading-tight">{item.title}</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-2">
-                        <span>{item.duration}</span>
-                        {item.completed && <span className="text-emerald-400 font-semibold">• Done</span>}
+                  <div key={item.id} className="flex flex-col gap-1">
+                    <button
+                      onClick={() => !isLocked && setActiveItemId(item.id)}
+                      disabled={isLocked}
+                      className={`w-full text-left p-2.5 rounded-lg border text-xs transition-all flex items-start gap-2 cursor-pointer ${
+                        isLocked
+                          ? 'opacity-60 bg-slate-950/30 border-slate-850 text-slate-500 cursor-not-allowed'
+                          : isActive
+                          ? 'bg-blue-600/10 border-blue-500/60 text-white shadow-sm'
+                          : 'bg-slate-950/60 hover:bg-slate-800/80 border-slate-800/80 text-slate-300'
+                      }`}
+                    >
+                      <div className="mt-0.5">
+                        {item.completed ? (
+                          <CheckCircle className="w-4 h-4 text-emerald-400" />
+                        ) : isLocked ? (
+                          <AlertCircle className="w-4 h-4 text-slate-500" />
+                        ) : item.type === 'video' ? (
+                          <Play className="w-4 h-4 text-blue-400" />
+                        ) : item.type === 'reading' ? (
+                          <BookOpen className="w-4 h-4 text-amber-400" />
+                        ) : item.type === 'quiz' ? (
+                          <HelpCircle className="w-4 h-4 text-indigo-400" />
+                        ) : (
+                          <MessageSquare className="w-4 h-4 text-slate-400" />
+                        )}
                       </div>
-                    </div>
-                  </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium truncate leading-tight">{item.title}</div>
+                        <div className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-2">
+                          <span>{item.duration}</span>
+                          {item.completed && <span className="text-emerald-400 font-semibold">• Done</span>}
+                          {isLocked && <span className="text-amber-400 font-semibold">• Locked</span>}
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Moodle Restriction Lock Box matching user's screenshot */}
+                    {isLocked && (
+                      <div className="bg-slate-950/80 border border-slate-800/80 rounded px-2.5 py-1 text-[10px] text-slate-400 flex items-center gap-1.5 leading-snug">
+                        <span>🔒</span>
+                        <span>
+                          Not available unless: The activity <b className="text-slate-300">{prevItemTitle}</b> is marked complete
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>

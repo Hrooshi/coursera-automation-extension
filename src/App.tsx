@@ -4,15 +4,16 @@ import { ExtensionPopupWidget } from './components/ExtensionPopupWidget';
 import { LmsSimulator } from './components/LmsSimulator';
 import { ExtensionFilesViewer } from './components/ExtensionFilesViewer';
 import { InstallationGuide } from './components/InstallationGuide';
+import { ConsoleScriptsViewer } from './components/ConsoleScriptsViewer';
 import { ConsoleLogger } from './components/ConsoleLogger';
 import { downloadExtensionZip } from './utils/extensionGenerator';
 import { 
   Zap, Laptop, FileCode, BookOpen, Download, 
-  Sparkles, CheckCircle2, Shield, Eye, Command 
+  Sparkles, CheckCircle2, Shield, Eye, Command, Terminal
 } from 'lucide-react';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<'simulator' | 'source' | 'guide'>('simulator');
+  const [activeTab, setActiveTab] = useState<'simulator' | 'scripts' | 'source' | 'guide'>('simulator');
 
   // Extension Settings State
   const [settings, setSettings] = useState<ExtensionSettings>({
@@ -140,7 +141,7 @@ export function App() {
           <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
             <button
               onClick={() => setActiveTab('simulator')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
                 activeTab === 'simulator'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -150,8 +151,19 @@ export function App() {
               <span>LMS Simulator</span>
             </button>
             <button
+              onClick={() => setActiveTab('scripts')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
+                activeTab === 'scripts'
+                  ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
+                  : 'text-indigo-400 hover:text-indigo-300'
+              }`}
+            >
+              <Terminal className="w-3.5 h-3.5" />
+              <span>⚡ 1-Click Console Scripts</span>
+            </button>
+            <button
               onClick={() => setActiveTab('source')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
                 activeTab === 'source'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -162,7 +174,7 @@ export function App() {
             </button>
             <button
               onClick={() => setActiveTab('guide')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
                 activeTab === 'guide'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -285,6 +297,12 @@ export function App() {
 
             {/* Live Console Logger */}
             <ConsoleLogger logs={logs} onClearLogs={() => setLogs([])} />
+          </div>
+        )}
+
+        {activeTab === 'scripts' && (
+          <div className="flex flex-col gap-4">
+            <ConsoleScriptsViewer />
           </div>
         )}
 

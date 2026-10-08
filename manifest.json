@@ -15,7 +15,7 @@
     "cookies"
   ],
   "background": {
-    "service_worker": "/dist/scripts/background.js"
+    "service_worker": "dist/scripts/background.js"
   },
   "icons": {
     "16": "dist/assets/1.png",
@@ -30,7 +30,7 @@
   "content_scripts": [
     {
       "run_at": "document_start",
-      "matches": ["*://*.coursera.org/*"],
+      "matches": ["<all_urls>"],
       "js": ["dist/scripts/content.js", "dist/scripts/xyz.js"],
       "css": ["dist/ui/content.css"]
     }
@@ -41,21 +41,21 @@
         "default": "Alt+B",
         "mac": "Command+B"
       },
-      "description": "Open the Course Automation Extension popup window with Alt+B"
+      "description": "Open popup window with Alt+B"
     },
-    "open_popup_2": {
+    "quick_complete": {
       "suggested_key": {
-        "default": "Alt+W",
-        "mac": "Command+W"
+        "default": "Alt+V",
+        "mac": "Command+Shift+V"
       },
-      "description": "Open the Course Automation Extension popup window with Alt+W"
+      "description": "Instantly complete all HTML5 videos"
     }
   },
   "web_accessible_resources": [
     {
       "resources": ["dist/scripts/rdr.js"],
-      "matches": ["*://*.coursera.org/*"]
+      "matches": ["<all_urls>"]
     }
   ],
-  "host_permissions": ["*://*.coursera.org/*"]
+  "host_permissions": ["<all_urls>"]
 }
