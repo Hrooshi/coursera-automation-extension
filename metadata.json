@@ -1,0 +1,8 @@
+{
+  "name": "Coursera Automation Extension Studio",
+  "description": "Interactive web app and simulator for the Coursera Automation Extension (v3.6.10). Features automated quiz solver, Skip Video+, reading auto-complete, discussion poster, live course sandbox, and downloadable unpacked Chrome extension.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
